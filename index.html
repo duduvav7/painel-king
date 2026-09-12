@@ -928,9 +928,9 @@ el('c-mes').textContent = (D.mes||'').toLowerCase();
       <span class="big orange" style="margin:0">${c.atual==null?'—':brl(c.atual)}</span></div>
     ${c.investidoAcumulado!=null?`<div class="kv" style="border-top:1px solid var(--line)"><span class="k" style="color:var(--tx);font-weight:600">Aplicado em renda fixa</span><span class="v" style="color:#2f4f8f;font-weight:700">${brl(c.investidoAcumulado)}</span></div>
     <div class="kv" style="margin-top:-6px"><span class="k"></span><span class="v"><span class="sub">saldo acumulado · não entra no lucro</span></span></div>`:''}
-    ${(p=>`<div class="kv" style="border-top:1px solid var(--line)"><span class="k">Gastos (mercadoria)</span><span class="v">${brl(p.gastos)} <span class="sub">· ${p.nGastos||0} lanç.</span></span></div>
+    ${(p=>`<div class="kv" style="border-top:1px solid var(--line)"><span class="k">Gastos (mercadoria)</span><span class="v neg">${brl(p.gastos)} <span class="sub">· ${p.nGastos||0} lanç.</span></span></div>
     <div class="kv" style="margin-top:-6px"><span class="k"></span><span class="v"><span class="sub">(− ${brl(c.maickExtra||0)} maick)</span></span></div>
-    <div class="kv"><span class="k">Despesas</span><span class="v">${brl(p.despesas)} <span class="sub">· ${p.nDespesas||0} lanç.</span></span></div>`)(D.caixaDetalhado||{})}
+    <div class="kv"><span class="k">Despesas</span><span class="v neg">${brl(p.despesas)} <span class="sub">· ${p.nDespesas||0} lanç.</span></span></div>`)(D.caixaDetalhado||{})}
     ${c.obs?`<div class="note">⚠️ ${c.obs}</div>`:''}`;
 })();
 
