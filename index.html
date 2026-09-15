@@ -187,7 +187,7 @@
 </main>
 <script>
 window.KING_DATA = {
-  "atualizadoEm": "14/09/2026 21:20",
+  "atualizadoEm": "14/09/2026 21:35",
   "mes": "SETEMBRO/2026",
   "caixa": {
     "inicial": 11584.87,
@@ -197,12 +197,14 @@ window.KING_DATA = {
     "extras": 692.0,
     "maickExtra": 0,
     "ajuste": -73.54,
-    "atual": 20454.66,
-    "obs": "Caixa atual já desconta R$ 935,00 de vale (João Pedro, 1ª parcela) — não entra no lucro; volta na folha do dia 30.",
+    "atual": 12767.64,
+    "obs": "Caixa atual já desconta R$ 935,00 de vale (João Pedro, 1ª parcela) e R$ 7.687,02 do freezer (imobilizado) — nenhum dos dois entra no lucro; o vale volta na folha do dia 30.",
     "investimentos": 20130.46,
     "resgates": 0.0,
     "investidoAcumulado": 46659.46,
-    "vales": 935
+    "vales": 935,
+    "imobilizado": 7687.02,
+    "imobilizadoObs": "freezer 14/09 · só abate o caixa · não entra no lucro"
   },
   "caixaDetalhado": {
     "gastos": 42768.61,
@@ -931,6 +933,8 @@ el('c-mes').textContent = (D.mes||'').toLowerCase();
     <div class="kv"><span class="k">Entradas extras</span><span class="v pos">+ ${brl(c.extras)}</span></div>
     ${c.investimentos?`<div class="kv"><span class="k">Investimento (renda fixa)</span><span class="v inv">− ${brl(c.investimentos)}</span></div>`:''}
     ${c.resgates?`<div class="kv"><span class="k">Resgate (renda fixa)</span><span class="v pos">+ ${brl(c.resgates)}</span></div>`:''}
+    ${c.imobilizado?`<div class="kv"><span class="k">Imobilizado (equipamento)</span><span class="v inv">− ${brl(c.imobilizado)}</span></div>
+    <div class="kv" style="margin-top:-6px"><span class="k"></span><span class="v"><span class="sub">${c.imobilizadoObs||'só abate o caixa · não entra no lucro'}</span></span></div>`:''}
     ${c.vendas!=null?`<div class="kv"><span class="k">Taxa maquininha (0,98%)</span><span class="v neg">− ${brl(c.vendas*0.0098)}</span></div>`:''}
     ${(c.vendas!=null&&(D.caixaDetalhado||{}).gastos!=null)?(l=>`<div class="kv"><span class="k">Lucro Bruto</span><span class="v" style="color:#2f4f8f">${brl(l)} <span class="sub">(${(c.vendas?l/c.vendas*100:0).toFixed(1).replace('.',',')}%)</span></span></div>`)(c.vendas-((D.caixaDetalhado||{}).gastos-(c.maickExtra||0))):''}
     ${(c.vendas!=null&&c.saidas!=null)?(l=>`<div class="kv"><span class="k">Lucro Líquido</span><span class="v ${l>=0?'pos':'neg'}">${brl(l)} <span class="sub">(${(c.vendas?l/c.vendas*100:0).toFixed(1).replace('.',',')}%)</span></span></div>`)(c.vendas-(c.saidas-(c.maickExtra||0))-c.vendas*0.0098):''}
