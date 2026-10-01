@@ -192,7 +192,7 @@ main{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:auto;al
 </main>
 <script>
 window.KING_DATA = {
- "atualizadoEm": "01/10/2026 00:30",
+ "atualizadoEm": "01/10/2026 01:30",
  "mes": "OUTUBRO/2026",
  "caixa": {
   "inicial": 3026.09,
@@ -992,6 +992,18 @@ window.KING_DATA = {
     "qtd": "3 fd — não veio na nota 30/09"
    }
   ]
+ },
+ "lucroReal": {
+  "ate": "01/10",
+  "vendas": 0.0,
+  "custoVendido": 0.0,
+  "margemBruta": 0.3327,
+  "fixas": 47440.0,
+  "extras": 0.0,
+  "taxa": 0.0,
+  "valor": -47440.0,
+  "faltaVender": 146918.55,
+  "obs": "margem de referência = setembro (33,27%) até o 1º CSV de outubro; atualiza toda segunda à noite com o CSV de vendas por produto"
  }
 };
 
@@ -1019,6 +1031,9 @@ el('c-mes').textContent = (D.mes||'').toLowerCase();
     ${c.vendas!=null?`<div class="kv"><span class="k">Taxa maquininha (0,98%)</span><span class="v neg">− ${brl(c.vendas*0.0098)}</span></div>`:''}
     ${(c.vendas!=null&&(D.caixaDetalhado||{}).gastos!=null)?(l=>`<div class="kv"><span class="k">Lucro Bruto</span><span class="v" style="color:#2f4f8f">${brl(l)} <span class="sub">(${(c.vendas?l/c.vendas*100:0).toFixed(1).replace('.',',')}%)</span></span></div>`)(c.vendas-((D.caixaDetalhado||{}).gastos-(c.maickExtra||0))):''}
     ${(c.vendas!=null&&c.saidas!=null)?(l=>`<div class="kv"><span class="k">Lucro Líquido</span><span class="v ${l>=0?'pos':'neg'}">${brl(l)} <span class="sub">(${(c.vendas?l/c.vendas*100:0).toFixed(1).replace('.',',')}%)</span></span></div>`)(c.vendas-(c.saidas-(c.maickExtra||0))-c.vendas*0.0098):''}
+    ${(r=>r?`<div class="kv" style="border-top:1px solid var(--line)"><span class="k" style="color:var(--tx);font-weight:600">Lucro Real <span class="sub">(custo do vendido · até ${r.ate||'—'})</span></span><span class="v ${r.valor>=0?'pos':'neg'}">${brl(r.valor)} <span class="sub">(${(r.vendas?r.valor/r.vendas*100:0).toFixed(1).replace('.',',')}%)</span></span></div>
+    <div class="kv" style="margin-top:-6px"><span class="k"></span><span class="v"><span class="sub">venda ${brl(r.vendas)} − custo do vendido ${brl(r.custoVendido)} (margem ${(r.margemBruta*100).toFixed(1).replace('.',',')}%) − fixas ${brl(r.fixas)} − extras ${brl(r.extras)} − taxa</span></span></div>
+    <div class="kv"><span class="k" style="color:var(--orange);font-weight:600">Falta vender pra pagar as contas</span><span class="v" style="color:var(--orange);font-weight:700">${r.faltaVender>0?brl(r.faltaVender):'✅ contas pagas'}</span></div>`:'')(D.lucroReal)}
     <div class="kv"><span class="k" style="color:var(--tx);font-weight:600">Caixa atual</span>
       <span class="big orange" style="margin:0">${c.atual==null?'—':brl(c.atual)}</span></div>
     ${c.investidoAcumulado!=null?`<div class="kv" style="border-top:1px solid var(--line)"><span class="k" style="color:var(--tx);font-weight:600">Aplicado em renda fixa</span><span class="v" style="color:#2f4f8f;font-weight:700">${brl(c.investidoAcumulado)}</span></div>
