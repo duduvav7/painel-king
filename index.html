@@ -170,8 +170,8 @@ main{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:auto;al
     <div class="body" id="card-caixa"></div>
   </section>
   <section class="card">
-    <h2>Estoque baixo <small id="est-at"></small></h2>
-    <div class="body" id="card-estoque"></div>
+    <h2>Lucro real do mês até hoje <small id="lr-at"></small></h2>
+    <div class="body" id="card-lucroreal"></div>
   </section>
   <section class="card">
     <h2>Variação de custo <span class="tag up">subiu</span> <small>último → atual · 2 semanas</small></h2>
@@ -186,8 +186,8 @@ main{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:auto;al
     <div class="body" id="card-quebra"></div>
   </section>
   <section class="card">
-    <h2>Produtos pendentes dessa semana <small id="pend-sem"></small></h2>
-    <div class="body" id="card-pendentes"></div>
+    <h2>Estoque baixo <small id="est-at"></small></h2>
+    <div class="body" id="card-estoque"></div>
   </section>
 </main>
 <script>
@@ -1031,9 +1031,6 @@ el('c-mes').textContent = (D.mes||'').toLowerCase();
     ${c.vendas!=null?`<div class="kv"><span class="k">Taxa maquininha (0,98%)</span><span class="v neg">− ${brl(c.vendas*0.0098)}</span></div>`:''}
     ${(c.vendas!=null&&(D.caixaDetalhado||{}).gastos!=null)?(l=>`<div class="kv"><span class="k">Lucro Bruto</span><span class="v" style="color:#2f4f8f">${brl(l)} <span class="sub">(${(c.vendas?l/c.vendas*100:0).toFixed(1).replace('.',',')}%)</span></span></div>`)(c.vendas-((D.caixaDetalhado||{}).gastos-(c.maickExtra||0))):''}
     ${(c.vendas!=null&&c.saidas!=null)?(l=>`<div class="kv"><span class="k">Lucro Líquido</span><span class="v ${l>=0?'pos':'neg'}">${brl(l)} <span class="sub">(${(c.vendas?l/c.vendas*100:0).toFixed(1).replace('.',',')}%)</span></span></div>`)(c.vendas-(c.saidas-(c.maickExtra||0))-c.vendas*0.0098):''}
-    ${(r=>r?`<div class="kv" style="border-top:1px solid var(--line)"><span class="k" style="color:var(--tx);font-weight:600">Lucro Real <span class="sub">(custo do vendido · até ${r.ate||'—'})</span></span><span class="v ${r.valor>=0?'pos':'neg'}">${brl(r.valor)} <span class="sub">(${(r.vendas?r.valor/r.vendas*100:0).toFixed(1).replace('.',',')}%)</span></span></div>
-    <div class="kv" style="margin-top:-6px"><span class="k"></span><span class="v"><span class="sub">venda ${brl(r.vendas)} − custo do vendido ${brl(r.custoVendido)} (margem ${(r.margemBruta*100).toFixed(1).replace('.',',')}%) − fixas ${brl(r.fixas)} − extras ${brl(r.extras)} − taxa</span></span></div>
-    <div class="kv"><span class="k" style="color:var(--orange);font-weight:600">Falta vender pra pagar as contas</span><span class="v" style="color:var(--orange);font-weight:700">${r.faltaVender>0?brl(r.faltaVender):'✅ contas pagas'}</span></div>`:'')(D.lucroReal)}
     <div class="kv"><span class="k" style="color:var(--tx);font-weight:600">Caixa atual</span>
       <span class="big orange" style="margin:0">${c.atual==null?'—':brl(c.atual)}</span></div>
     ${c.investidoAcumulado!=null?`<div class="kv" style="border-top:1px solid var(--line)"><span class="k" style="color:var(--tx);font-weight:600">Aplicado em renda fixa</span><span class="v" style="color:#2f4f8f;font-weight:700">${brl(c.investidoAcumulado)}</span></div>
@@ -1042,6 +1039,24 @@ el('c-mes').textContent = (D.mes||'').toLowerCase();
     <div class="kv" style="margin-top:-6px"><span class="k"></span><span class="v"><span class="sub">(− ${brl(c.maickExtra||0)} maick)</span></span></div>
     <div class="kv"><span class="k">Despesas</span><span class="v neg">${brl(p.despesas)} <span class="sub">· ${p.nDespesas||0} lanç.</span></span></div>`)(D.caixaDetalhado||{})}
     ${c.obs?`<div class="note">⚠️ ${c.obs}</div>`:''}`;
+})();
+
+
+/* lucro real */
+(()=>{ const r=D.lucroReal; if(!r){ el('card-lucroreal').innerHTML='<div class="note">Ainda sem CSV de vendas por produto neste mês.</div>'; return; }
+  el('lr-at').textContent = 'até '+(r.ate||'—')+' · '+(D.mes||'').toLowerCase();
+  const pct=v=>(r.vendas?v/r.vendas*100:0).toFixed(1).replace('.',',')+'%';
+  el('card-lucroreal').innerHTML =
+   `<div class="kv"><span class="k">Vendas (CPlug)</span><span class="v" style="color:#2f4f8f">${brl(r.vendas)}</span></div>
+    <div class="kv"><span class="k">Custo do que foi vendido</span><span class="v neg">− ${brl(r.custoVendido)}</span></div>
+    <div class="kv"><span class="k">Lucro bruto</span><span class="v" style="color:#2f4f8f">${brl(r.vendas-r.custoVendido)} <span class="sub">(margem ${(r.margemBruta*100).toFixed(1).replace('.',',')}%)</span></span></div>
+    <div class="kv"><span class="k">Despesas fixas (Contas do mês)</span><span class="v neg">− ${brl(r.fixas)}</span></div>
+    <div class="kv"><span class="k">Despesas extras lançadas</span><span class="v neg">− ${brl(r.extras)}</span></div>
+    <div class="kv"><span class="k">Taxa maquininha (0,98%)</span><span class="v neg">− ${brl(r.taxa)}</span></div>
+    <div class="kv"><span class="k" style="color:var(--tx);font-weight:600">Lucro Real</span>
+      <span class="big ${r.valor>=0?'pos':'neg'}" style="margin:0">${brl(r.valor)} <span class="sub">(${pct(r.valor)})</span></span></div>
+    <div class="kv" style="border-top:1px solid var(--line)"><span class="k" style="color:var(--orange);font-weight:600">Falta vender pra pagar as contas</span><span class="v" style="color:var(--orange);font-weight:700">${r.faltaVender>0?brl(r.faltaVender):'✅ contas pagas'}</span></div>
+    ${r.obs?`<div class="note">${r.obs}</div>`:''}`;
 })();
 
 /* estoque baixo */
@@ -1104,8 +1119,8 @@ function varRows(list, up){
 
 /* produtos pendentes da semana */
 (()=>{ const p=D.pendentesSemana||{}; const fora=p.fora||[], zer=p.zerados||[];
-  el('pend-sem').textContent = p.semana ? 'cotação '+p.semana : '';
-  el('card-pendentes').innerHTML =
+  (el('pend-sem')||{}).textContent = p.semana ? 'cotação '+p.semana : '';
+  (el('card-pendentes')||{}).innerHTML =
     (fora.length
       ? fora.map(x=>`<div class="pend warn"><span class="dot"></span><div><b>${x.produto}</b> <span class="sub">· pedido: ${x.qtd||'—'}</span></div></div>`).join('')
       : '<div class="note">Tudo que estava na lista entrou em alguma tabela. ✅</div>')
