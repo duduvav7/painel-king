@@ -839,13 +839,15 @@ el('c-mes').textContent = (D.mes||'').toLowerCase();
   el('card-lucroreal').innerHTML =
    `<div class="kv"><span class="k">Vendas (CPlug)</span><span class="v" style="color:#2f4f8f">${brl(r.vendas)}</span></div>
     <div class="kv"><span class="k">Custo do que foi vendido</span><span class="v neg">− ${brl(r.custoVendido)}</span></div>
-    <div class="kv"><span class="k">Lucro bruto</span><span class="v" style="color:#2f4f8f">${brl(r.vendas-r.custoVendido)} <span class="sub">(margem ${(r.margemBruta*100).toFixed(1).replace('.',',')}%)</span></span></div>
+    <div class="kv"><span class="k">Lucro das Vendas (Lucro Bruto)</span><span class="v" style="color:#2f4f8f">${brl(r.vendas-r.custoVendido)} <span class="sub">(margem ${(r.margemBruta*100).toFixed(1).replace('.',',')}%)</span></span></div>
     <div class="kv"><span class="k">Despesas fixas (Contas do mês)</span><span class="v neg">− ${brl(r.fixas)}</span></div>
     <div class="kv"><span class="k">Despesas extras lançadas</span><span class="v neg">− ${brl(r.extras)}</span></div>
     <div class="kv"><span class="k">Taxa maquininha (0,98%)</span><span class="v neg">− ${brl(r.taxa)}</span></div>
     <div class="kv"><span class="k" style="color:var(--tx);font-weight:600">Lucro Real</span>
       <span class="big ${r.valor>=0?'pos':'neg'}" style="margin:0">${brl(r.valor)} <span class="sub">(${pct(r.valor)})</span></span></div>
-    <div class="kv" style="border-top:1px solid var(--line)"><span class="k" style="color:var(--orange);font-weight:600">Falta vender pra pagar as contas</span><span class="v" style="color:var(--orange);font-weight:700">${r.faltaVender>0?brl(r.faltaVender):'✅ contas pagas'}</span></div>
+    ${r.valor>=0
+      ?`<div class="kv" style="border-top:1px solid var(--line)"><span class="k" style="color:var(--down);font-weight:600">Sobra do Mês</span><span class="v" style="color:var(--down);font-weight:700">${brl(r.valor)}</span></div>`
+      :`<div class="kv" style="border-top:1px solid var(--line)"><span class="k" style="color:var(--orange);font-weight:600">Falta vender pra pagar as contas</span><span class="v" style="color:var(--orange);font-weight:700">${brl(r.faltaVender)}</span></div>`}
     ${r.obs?`<div class="note">${r.obs}</div>`:''}`;
 })();
 
